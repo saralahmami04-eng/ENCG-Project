@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Salles d'étude – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0"><i class="fas fa-door-open me-2 text-primary"></i>Salles d'étude</h4>
+  <a href="{{ url_for('rooms.create') }}" class="btn btn-primary">
+    <i class="fas fa-plus me-1"></i>Créer une salle
+  </a>
+</div>
+
+<!-- Filtres -->
+<form class="row g-2 mb-4" method="GET">
+  <div class="col-md-4">
+    <select name="school" class="form-select">
+      <option value="">Toutes les écoles</option>
+      {% for school in schools %}
+      <option value="{{ school }}" {{ 'selected' if school_filter == school }}>{{ school }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select name="mode" class="form-select">
+      <option value="">Tous les modes</option>
+      <option value="group" {{ 'selected' if mode_filter == 'group' }}>👥 Groupe</option>
+      <option value="silent" {{ 'selected' if mode_filter == 'silent' }}>🔇 Silence</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-outline-secondary w-100">Filtrer</button>
+  </div>
+  {% if school_filter or mode_filter %}
+  <div class="col-md-2">
+    <a href="{{ url_for('rooms.index') }}" class="btn btn-outline-danger w-100">Réinitialiser</a>
+  </div>
+  {% endif %}
+</form>
+
+{% if rooms %}
+<div class="row g-3">
+  {% for room in rooms %}
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm room-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h6 class="fw-semibold mb-0">{{ room.name }}</h6>
+          <span class="badge {{ 'bg-primary' if room.mode == 'group' else 'bg-secondary' }}">
+            {{ '👥 Groupe' if room.mode == 'group' else '🔇 Silence' }}
+          </span>
+        </div>
+        {% if room.subject %}
+        <small class="badge bg-light text-dark border">{{ room.subject }}</small>
+        {% endif %}
+        <p class="text-muted small mt-2 mb-2">{{ room.description or 'Aucune description.' }}</p>
+        <small class="text-muted">
+          <i class="fas fa-school me-1"></i>{{ room.school or 'Toutes écoles' }}<br>
+          <i class="fas fa-user me-1"></i>{{ room.creator.name }}
+        </small>
+      </div>
+      <div class="card-footer d-flex gap-2 bg-transparent border-0 pb-3">
+        <a href="{{ url_for('rooms.room', room_id=room.id) }}" class="btn btn-sm btn-primary flex-grow-1">
+          Rejoindre
+        </a>
+        {% if room.creator_id == current_user.id %}
+        <form method="POST" action="{{ url_for('rooms.delete_room', room_id=room.id) }}"
+              onsubmit="return confirm('Supprimer cette salle ?')">
+          <button class="btn btn-sm btn-outline-danger">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="fas fa-door-open fa-3x mb-3 opacity-25"></i>
+  <p>Aucune salle disponible. Soyez le premier à en créer une !</p>
+  <a href="{{ url_for('rooms.create') }}" class="btn btn-primary">Créer une salle</a>
+</div>
+{% endif %}
+{% endblock %}

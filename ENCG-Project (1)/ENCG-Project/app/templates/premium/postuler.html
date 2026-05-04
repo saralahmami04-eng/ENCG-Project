@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Candidature – {{ opp.title }}{% endblock %}
+{% block content %}
+<div style="max-width:700px;margin:0 auto">
+  <a href="{{ url_for('premium.index') }}" class="text-muted small">← Retour aux offres</a>
+  <h3 class="mt-2">📋 Candidature : {{ opp.title }}</h3>
+  <p class="text-muted">{% if opp.company %}{{ opp.company }} · {% endif %}Test de pré-sélection IA en 2 parties</p>
+
+  <div class="alert alert-info">
+    🤖 <strong>Comment ça marche ?</strong> Répondez aux questions ci-dessous. Notre IA analysera vos réponses <strong>+ votre profil sur la plateforme</strong> (score, heures d'étude, ressources partagées) pour calculer votre score de pré-sélection.
+  </div>
+
+  <form method="POST">
+
+    <!-- PARTIE 1 : Test psychologique -->
+    <div class="card mb-4 border-warning">
+      <div class="card-header bg-warning text-dark"><strong>🧠 Partie 1 — Test psychologique</strong></div>
+      <div class="card-body">
+        {% for i, q in enumerate(psycho_questions) %}
+        <div class="mb-4">
+          <p class="fw-bold"><span class="badge bg-warning text-dark me-1">{{ i+1 }}</span> {{ q.q }}</p>
+          {% for text, val in q.choices %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="radio" name="psycho_{{ i }}" value="{{ val }}" id="p{{ i }}_{{ loop.index }}" required>
+            <label class="form-check-label" for="p{{ i }}_{{ loop.index }}">{{ text }}</label>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PARTIE 2 : Test de compétences -->
+    <div class="card mb-4 border-primary">
+      <div class="card-header bg-primary text-white"><strong>⚙️ Partie 2 — Test de compétences</strong></div>
+      <div class="card-body">
+        {% for i, q in enumerate(skills_questions) %}
+        <div class="mb-4">
+          <p class="fw-bold"><span class="badge bg-primary me-1">{{ i+1 }}</span> {{ q.q }}</p>
+          {% for text, val in q.choices %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="radio" name="skills_{{ i }}" value="{{ val }}" id="s{{ i }}_{{ loop.index }}" required>
+            <label class="form-check-label" for="s{{ i }}_{{ loop.index }}">{{ text }}</label>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="alert alert-secondary small">
+      <strong>Pondération du score final :</strong> Test psychologique 35% · Compétences 40% · Profil plateforme 25%
+    </div>
+
+    <button type="submit" class="btn btn-warning w-100 btn-lg fw-bold">🚀 Soumettre ma candidature</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Créer une salle – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-4">
+          <i class="fas fa-plus-circle me-2 text-primary"></i>Créer une salle d'étude
+        </h4>
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nom de la salle *</label>
+            <input type="text" name="name" class="form-control" placeholder="Ex: Maths – Analyse S3" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="2"
+                      placeholder="Sujet, objectifs…"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Matière / Sujet</label>
+            <input type="text" name="subject" class="form-control" placeholder="Ex: Comptabilité, Marketing…">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Mode</label>
+            <div class="d-flex gap-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mode" id="mode_group"
+                       value="group" checked>
+                <label class="form-check-label" for="mode_group">
+                  👥 <strong>Groupe</strong> – discussion ouverte
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mode" id="mode_silent"
+                       value="silent">
+                <label class="form-check-label" for="mode_silent">
+                  🔇 <strong>Silence</strong> – bibliothèque virtuelle
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">École</label>
+            <select name="school" class="form-select">
+              <option value="">Toutes les écoles</option>
+              {% for school in schools %}
+              <option value="{{ school }}" {{ 'selected' if current_user.school == school }}>
+                {{ school }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">
+              <i class="fas fa-check me-1"></i>Créer la salle
+            </button>
+            <a href="{{ url_for('rooms.index') }}" class="btn btn-outline-secondary">Annuler</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

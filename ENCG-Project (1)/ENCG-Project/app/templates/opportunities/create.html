@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Publier une opportunité – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-4">
+          <i class="fas fa-bullhorn me-2 text-warning"></i>Publier une opportunité
+        </h4>
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Titre *</label>
+            <input type="text" name="title" class="form-control"
+                   placeholder="Ex: Stage PFE – Finance" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Type</label>
+            <select name="opp_type" class="form-select">
+              <option value="">-- Type --</option>
+              {% for t in opp_types %}
+              <option value="{{ t }}">{{ t }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col">
+              <label class="form-label fw-semibold">Entreprise / Organisation</label>
+              <input type="text" name="company" class="form-control" placeholder="Nom de l'entreprise">
+            </div>
+            <div class="col">
+              <label class="form-label fw-semibold">Lieu</label>
+              <input type="text" name="location" class="form-control" placeholder="Casablanca, Remote…">
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col">
+              <label class="form-label fw-semibold">Date limite</label>
+              <input type="text" name="deadline" class="form-control" placeholder="Ex: 30/05/2025">
+            </div>
+            <div class="col">
+              <label class="form-label fw-semibold">Contact</label>
+              <input type="text" name="contact" class="form-control" placeholder="email ou lien">
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Description *</label>
+            <textarea name="description" class="form-control" rows="5"
+                      placeholder="Décrivez l'opportunité en détail…" required></textarea>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning text-white flex-grow-1">
+              <i class="fas fa-paper-plane me-1"></i>Publier
+            </button>
+            <a href="{{ url_for('opportunities.index') }}" class="btn btn-outline-secondary">Annuler</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

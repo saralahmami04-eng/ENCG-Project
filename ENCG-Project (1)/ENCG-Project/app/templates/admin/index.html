@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Administration{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>🛡️ Tableau de bord Admin</h2>
+  <span class="badge bg-danger fs-6">Accès administrateur</span>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card text-center border-primary">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-primary">{{ total_users }}</div>
+        <div class="text-muted small">Utilisateurs inscrits</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center border-success">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-success">{{ total_resources }}</div>
+        <div class="text-muted small">Ressources partagées</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center border-warning">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-warning">{{ total_opps }}</div>
+        <div class="text-muted small">Opportunités</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center border-secondary">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-secondary">{{ total_avis }}</div>
+        <div class="text-muted small">Avis étudiants</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+  <a href="{{ url_for('admin.utilisateurs') }}" class="btn btn-primary">
+    <i class="fas fa-users me-1"></i>Voir tous les utilisateurs
+  </a>
+  <a href="{{ url_for('admin.voir_avis') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-comments me-1"></i>Voir tous les avis
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <strong>👥 Derniers inscrits</strong>
+    <a href="{{ url_for('admin.utilisateurs') }}" class="btn btn-sm btn-outline-primary">Voir tous</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>École</th>
+          <th>Score</th>
+          <th>Inscription</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in recent_users %}
+        <tr>
+          <td>
+            <strong>{{ u.name }}</strong>
+            {% if u.is_admin %}
+            <span class="badge bg-danger ms-1">Admin</span>
+            {% endif %}
+          </td>
+          <td class="small text-muted">{{ u.email }}</td>
+          <td class="small">{{ u.school }}</td>
+          <td><span class="badge bg-success">{{ u.score }} pts</span></td>
+          <td class="small text-muted">{{ u.created_at.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Tableau de bord – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-0">Bonjour, {{ current_user.name }} 👋</h2>
+    <small class="text-muted">{{ current_user.school }}</small>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div class="row g-3 mb-5">
+  <div class="col-md-4">
+    <a href="{{ url_for('rooms.create') }}" class="card card-action text-decoration-none h-100">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-plus-circle fa-2x mb-2 text-primary"></i>
+        <div class="fw-semibold">Créer une salle</div>
+        <small class="text-muted">Démarrer une session d'étude</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('resources.upload') }}" class="card card-action text-decoration-none h-100">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-upload fa-2x mb-2 text-success"></i>
+        <div class="fw-semibold">Partager une ressource</div>
+        <small class="text-muted">Cours, résumés, exercices</small>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('opportunities.create') }}" class="card card-action text-decoration-none h-100">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-bullhorn fa-2x mb-2 text-warning"></i>
+        <div class="fw-semibold">Publier une opportunité</div>
+        <small class="text-muted">Stage, emploi, concours</small>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Salles actives -->
+<section class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0"><i class="fas fa-door-open me-2 text-primary"></i>Salles d'étude actives</h5>
+    <a href="{{ url_for('rooms.index') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
+  </div>
+  {% if rooms %}
+  <div class="row g-3">
+    {% for room in rooms %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h6 class="fw-semibold mb-1">{{ room.name }}</h6>
+            <span class="badge {{ 'bg-primary' if room.mode == 'group' else 'bg-secondary' }}">
+              {{ '👥 Groupe' if room.mode == 'group' else '🔇 Silence' }}
+            </span>
+          </div>
+          {% if room.subject %}<small class="text-muted">{{ room.subject }}</small>{% endif %}
+          <p class="small text-muted mt-1 mb-2">{{ room.description or '' }}</p>
+          <small class="text-muted"><i class="fas fa-school me-1"></i>{{ room.school or 'Toutes écoles' }}</small>
+        </div>
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <a href="{{ url_for('rooms.room', room_id=room.id) }}" class="btn btn-sm btn-primary w-100">
+            Rejoindre
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-muted">Aucune salle active pour le moment.</p>
+  {% endif %}
+</section>
+
+<!-- Ressources récentes -->
+<section class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0"><i class="fas fa-book me-2 text-success"></i>Ressources récentes</h5>
+    <a href="{{ url_for('resources.index') }}" class="btn btn-sm btn-outline-success">Voir tout</a>
+  </div>
+  {% if resources %}
+  <div class="row g-3">
+    {% for r in resources %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <span class="badge bg-light text-dark border mb-2">{{ r.resource_type or 'Autre' }}</span>
+          <h6 class="fw-semibold">{{ r.title }}</h6>
+          <small class="text-muted">{{ r.uploader.name }} · {{ r.school or '' }}</small>
+        </div>
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <a href="{{ url_for('resources.download', resource_id=r.id) }}" class="btn btn-sm btn-outline-success w-100">
+            <i class="fas fa-download me-1"></i>Télécharger
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-muted">Aucune ressource partagée pour le moment.</p>
+  {% endif %}
+</section>
+
+<!-- Opportunités récentes -->
+<section class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0"><i class="fas fa-briefcase me-2 text-warning"></i>Opportunités récentes</h5>
+    <a href="{{ url_for('opportunities.index') }}" class="btn btn-sm btn-outline-warning">Voir tout</a>
+  </div>
+  {% if opportunities %}
+  <div class="row g-3">
+    {% for o in opportunities %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <span class="badge opp-badge-{{ (o.opp_type or 'autre')|lower|replace('é','e') }} mb-2">
+            {{ o.opp_type or 'Autre' }}
+          </span>
+          <h6 class="fw-semibold">{{ o.title }}</h6>
+          {% if o.company %}<small class="text-muted">{{ o.company }}</small>{% endif %}
+        </div>
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <a href="{{ url_for('opportunities.detail', opp_id=o.id) }}" class="btn btn-sm btn-outline-dark w-100">
+            Voir détails
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-muted">Aucune opportunité publiée pour le moment.</p>
+  {% endif %}
+</section>
+{% endblock %}

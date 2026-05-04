@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Avis des étudiants{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>💬 Avis des étudiants</h2>
+  <a href="{{ url_for('avis.donner') }}" class="btn btn-primary">
+    {% if mon_avis %}✏️ Modifier mon avis{% else %}+ Donner mon avis{% endif %}
+  </a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-warning">{{ note_moyenne }}</div>
+        <div class="text-muted small">Note moyenne / 5</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="fs-2 fw-bold text-primary">{{ total_avis }}</div>
+        <div class="text-muted small">Avis publiés</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 flex-wrap mb-4">
+  <a href="{{ url_for('avis.index') }}"
+     class="btn btn-sm {% if not cat_filter %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+    Tous
+  </a>
+  {% for code, label in categories %}
+  <a href="{{ url_for('avis.index', categorie=code) }}"
+     class="btn btn-sm {% if cat_filter == code %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+    {{ label }}
+  </a>
+  {% endfor %}
+</div>
+
+{% if tous_avis %}
+<div class="row g-3">
+  {% for a in tous_avis %}
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <strong>{{ a.auteur.name }}</strong>
+            <span class="text-muted small ms-2">{{ a.auteur.school }}</span>
+          </div>
+          <div class="text-warning">
+            {% for i in range(a.note) %}⭐{% endfor %}
+          </div>
+        </div>
+        <p class="mb-2">{{ a.contenu }}</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="badge bg-secondary">
+            {% for code, label in categories %}
+              {% if code == a.categorie %}{{ label }}{% endif %}
+            {% endfor %}
+          </span>
+          <small class="text-muted">{{ a.created_at.strftime('%d/%m/%Y') }}</small>
+        </div>
+        {% if a.auteur_id == current_user.id %}
+        <div class="mt-2 d-flex gap-2">
+          <a href="{{ url_for('avis.donner') }}" class="btn btn-sm btn-outline-primary">✏️ Modifier</a>
+          <form method="POST" action="{{ url_for('avis.supprimer', avis_id=a.id) }}"
+                onsubmit="return confirm('Supprimer cet avis ?')">
+            <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Supprimer</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <p class="fs-4">Aucun avis pour le moment.</p>
+  <a href="{{ url_for('avis.donner') }}" class="btn btn-primary">Soyez le premier !</a>
+</div>
+{% endif %}
+
+{% endblock %}

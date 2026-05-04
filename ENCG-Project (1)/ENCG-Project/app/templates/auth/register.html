@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Inscription – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper d-flex align-items-center justify-content-center min-vh-100">
+  <div class="auth-card card shadow-lg border-0" style="max-width: 500px;">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+        <h3 class="fw-bold">Créer un compte</h3>
+        <p class="text-muted">Rejoignez le réseau ENCG Maroc</p>
+      </div>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Nom complet</label>
+          <input type="text" name="name" class="form-control" placeholder="Prénom Nom" required
+                 value="{{ request.form.get('name', '') }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email</label>
+          <input type="email" name="email" class="form-control" placeholder="votre@email.com" required
+                 value="{{ request.form.get('email', '') }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">École</label>
+          <select name="school" class="form-select" required>
+            <option value="">-- Choisir votre école --</option>
+            {% for school in schools %}
+            <option value="{{ school }}" {{ 'selected' if request.form.get('school') == school }}>
+              {{ school }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Mot de passe</label>
+          <input type="password" name="password" class="form-control" placeholder="Minimum 6 caractères" required>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Confirmer le mot de passe</label>
+          <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+          <i class="fas fa-user-plus me-2"></i>S'inscrire
+        </button>
+      </form>
+
+      <hr class="my-4">
+      <p class="text-center text-muted mb-0">
+        Déjà un compte ?
+        <a href="{{ url_for('auth.login') }}" class="text-primary fw-semibold">Se connecter</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

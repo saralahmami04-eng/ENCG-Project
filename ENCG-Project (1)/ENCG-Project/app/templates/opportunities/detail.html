@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{{ opp.title }} – ENCG Study{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <a href="{{ url_for('opportunities.index') }}" class="btn btn-sm btn-outline-secondary mb-3">
+      <i class="fas fa-arrow-left me-1"></i>Retour
+    </a>
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <span class="badge opp-badge-{{ (opp.opp_type or 'autre')|lower|replace('é','e')|replace('è','e') }} mb-3">
+          {{ opp.opp_type or 'Autre' }}
+        </span>
+        <h3 class="fw-bold mb-3">{{ opp.title }}</h3>
+
+        <div class="row g-3 mb-4">
+          {% if opp.company %}
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Entreprise</small>
+            <span class="fw-semibold"><i class="fas fa-building me-1 text-muted"></i>{{ opp.company }}</span>
+          </div>
+          {% endif %}
+          {% if opp.location %}
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Lieu</small>
+            <span class="fw-semibold"><i class="fas fa-map-marker-alt me-1 text-muted"></i>{{ opp.location }}</span>
+          </div>
+          {% endif %}
+          {% if opp.deadline %}
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Date limite</small>
+            <span class="fw-semibold"><i class="fas fa-calendar me-1 text-muted"></i>{{ opp.deadline }}</span>
+          </div>
+          {% endif %}
+          {% if opp.contact %}
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Contact</small>
+            <span class="fw-semibold"><i class="fas fa-envelope me-1 text-muted"></i>{{ opp.contact }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <hr>
+        <h6 class="fw-semibold mb-3">Description</h6>
+        <div class="text-body" style="white-space: pre-line;">{{ opp.description }}</div>
+
+        <hr>
+        <small class="text-muted">
+          Publié par <strong>{{ opp.poster.name }}</strong>
+          le {{ opp.created_at.strftime('%d/%m/%Y à %H:%M') }}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

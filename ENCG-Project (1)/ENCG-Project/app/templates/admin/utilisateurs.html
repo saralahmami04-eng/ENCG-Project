@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Utilisateurs — Admin{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>👥 Tous les utilisateurs inscrits</h2>
+  <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary">← Retour</a>
+</div>
+
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-5">
+    <input type="text" name="search" class="form-control"
+           placeholder="🔍 Rechercher par nom ou email..."
+           value="{{ search }}">
+  </div>
+  <div class="col-md-4">
+    <select name="school" class="form-select" onchange="this.form.submit()">
+      <option value="">Toutes les écoles</option>
+      {% for s in schools %}
+      <option value="{{ s }}" {% if s == school_filter %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+  </div>
+  {% if search or school_filter %}
+  <div class="col-md-1">
+    <a href="{{ url_for('admin.utilisateurs') }}" class="btn btn-outline-secondary w-100">✕</a>
+  </div>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="card-header">
+    <strong>{{ users|length }} utilisateur(s) trouvé(s)</strong>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>École</th>
+          <th>Score</th>
+          <th>Inscription</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="text-muted small">{{ u.id }}</td>
+          <td>
+            <strong>{{ u.name }}</strong>
+            {% if u.is_admin %}
+            <span class="badge bg-danger ms-1">Admin</span>
+            {% endif %}
+          </td>
+          <td class="small">{{ u.email }}</td>
+          <td class="small">{{ u.school }}</td>
+          <td><span class="badge bg-success">{{ u.score }} pts</span></td>
+          <td class="small text-muted">{{ u.created_at.strftime('%d/%m/%Y') }}</td>
+          <td>
+            {% if u.id != current_user.id %}
+            <form method="POST" action="{{ url_for('admin.supprimer_utilisateur', user_id=u.id) }}"
+                  onsubmit="return confirm('Supprimer {{ u.name }} ?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                🗑️ Supprimer
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

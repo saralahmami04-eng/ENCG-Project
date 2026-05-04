@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Avis — Admin{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>💬 Tous les avis</h2>
+  <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary">← Retour</a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Étudiant</th>
+          <th>Note</th>
+          <th>Catégorie</th>
+          <th>Avis</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in avis %}
+        <tr>
+          <td>
+            <strong>{{ a.auteur.name }}</strong>
+            <div class="small text-muted">{{ a.auteur.school }}</div>
+          </td>
+          <td class="text-warning">
+            {% for i in range(a.note) %}⭐{% endfor %}
+          </td>
+          <td><span class="badge bg-secondary">{{ a.categorie }}</span></td>
+          <td>
+            {{ a.contenu[:100] }}
+            {% if a.contenu|length > 100 %}...{% endif %}
+          </td>
+          <td class="small text-muted">{{ a.created_at.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center text-muted py-4">Aucun avis pour le moment.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

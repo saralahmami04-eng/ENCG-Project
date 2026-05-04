@@ -1,0 +1,121 @@
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+  --encg-green: #1a7f4b;
+  --encg-green-light: #e8f5ee;
+  --encg-green-dark: #145c36;
+}
+
+/* ── Global ─────────────────────────────────────────────────── */
+body {
+  background-color: #f5f7fa;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────── */
+.navbar {
+  background: linear-gradient(135deg, var(--encg-green), var(--encg-green-dark)) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.navbar-brand { font-size: 1.2rem; letter-spacing: 0.5px; }
+.nav-link { opacity: 0.9; }
+.nav-link:hover { opacity: 1; }
+
+/* ── Auth pages ─────────────────────────────────────────────── */
+.auth-wrapper { background: linear-gradient(135deg, var(--encg-green-light), #fff); }
+.auth-card { width: 100%; max-width: 430px; border-radius: 16px; }
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.card { border-radius: 12px; border: none; }
+.card-action:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+  transition: all 0.2s;
+}
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1) !important;
+  transition: all 0.2s;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn-primary {
+  background-color: var(--encg-green);
+  border-color: var(--encg-green);
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--encg-green-dark);
+  border-color: var(--encg-green-dark);
+}
+.btn-outline-primary {
+  color: var(--encg-green);
+  border-color: var(--encg-green);
+}
+.btn-outline-primary:hover {
+  background-color: var(--encg-green);
+  border-color: var(--encg-green);
+}
+.text-primary { color: var(--encg-green) !important; }
+a.text-primary { color: var(--encg-green) !important; }
+
+/* ── Opportunity badges ─────────────────────────────────────── */
+.opp-badge-stage    { background: #d1ecf1; color: #0c5460; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+.opp-badge-emploi   { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+.opp-badge-concours { background: #fff3cd; color: #856404; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+.opp-badge-bourse   { background: #e2d9f3; color: #432874; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+.opp-badge-evenement{ background: #fde2e4; color: #842029; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+.opp-badge-autre    { background: #e2e3e5; color: #383d41; padding: 4px 10px; border-radius: 50px; font-size: .8rem; font-weight: 600; }
+
+/* ── Study room – video grid ────────────────────────────────── */
+#video-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 180px;
+}
+.video-tile {
+  position: relative;
+  background: #1a1a2e;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 200px;
+  height: 150px;
+}
+.video-tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.video-label {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  color: #fff;
+  font-size: 0.75rem;
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+#local-video { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Chat ───────────────────────────────────────────────────── */
+.message { margin-bottom: 12px; }
+.message-me { text-align: right; }
+.message-other { text-align: left; }
+.message-bubble {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 16px;
+  max-width: 80%;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+.message-me .message-bubble {
+  background: var(--encg-green);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.message-other .message-bubble {
+  background: #e9ecef;
+  color: #212529;
+  border-bottom-left-radius: 4px;
+}

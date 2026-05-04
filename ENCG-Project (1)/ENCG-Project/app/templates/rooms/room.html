@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}{{ room.name }} – ENCG Study{% endblock %}
+
+{% block content %}
+<!-- Hidden data for JS -->
+<div id="room-data"
+     data-room-id="{{ room.id }}"
+     data-user-id="{{ current_user.id }}"
+     data-username="{{ current_user.name }}">
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4 class="fw-bold mb-0">{{ room.name }}</h4>
+    <small class="text-muted">
+      {{ '👥 Mode Groupe' if room.mode == 'group' else '🔇 Mode Silence' }}
+      {% if room.subject %} · {{ room.subject }}{% endif %}
+      {% if room.school %} · {{ room.school }}{% endif %}
+    </small>
+  </div>
+  <a href="{{ url_for('rooms.index') }}" class="btn btn-sm btn-outline-secondary">
+    <i class="fas fa-arrow-left me-1"></i>Quitter
+  </a>
+</div>
+
+<div class="row g-3">
+  <!-- Vidéos -->
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="fas fa-video me-2 text-primary"></i>Caméras</span>
+        <div class="d-flex gap-2">
+          <button id="camera-btn" onclick="toggleCamera()" class="btn btn-sm btn-success">
+            <i class="fas fa-video me-1"></i>Activer caméra
+          </button>
+          {% if room.mode == 'group' %}
+          <button id="mic-btn" onclick="toggleMic()" class="btn btn-sm btn-outline-secondary" disabled>
+            <i class="fas fa-microphone me-1"></i>Micro
+          </button>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="video-grid">
+          <div class="video-tile" id="local-tile" style="display:none;">
+            <video id="local-video" autoplay playsinline muted></video>
+            <span class="video-label">Vous</span>
+          </div>
+          <div id="remote-videos"></div>
+        </div>
+        <p id="no-camera-msg" class="text-muted text-center py-4">
+          <i class="fas fa-video-slash fa-2x mb-2 d-block opacity-25"></i>
+          Activez votre caméra pour étudier avec les autres.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm" style="height: 520px; display: flex; flex-direction: column;">
+      <div class="card-header bg-white border-0 py-3">
+        <span class="fw-semibold"><i class="fas fa-comments me-2 text-primary"></i>Chat</span>
+      </div>
+      <div id="chat-messages" class="flex-grow-1 overflow-auto px-3 py-2"
+           style="max-height: 380px;">
+        {% for msg in messages %}
+        <div class="message {{ 'message-me' if msg.user_id == current_user.id else 'message-other' }}">
+          <small class="text-muted">
+            {{ 'Vous' if msg.user_id == current_user.id else msg.author.name }}
+            · {{ msg.created_at.strftime('%H:%M') }}
+          </small>
+          <div class="message-bubble">{{ msg.content }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
+        {% if room.mode == 'silent' %}
+        <p class="text-muted small text-center mb-0">
+          <i class="fas fa-book me-1"></i>Mode silence – chat désactivé
+        </p>
+        {% else %}
+        <div class="input-group">
+          <input type="text" id="chat-input" class="form-control"
+                 placeholder="Votre message…" maxlength="500">
+          <button onclick="sendMessage()" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/room.js') }}"></script>
+{% if room.mode == 'silent' %}
+<script>
+  // Disable chat input in silent mode
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) chatInput.disabled = true;
+</script>
+{% endif %}
+{% endblock %}
